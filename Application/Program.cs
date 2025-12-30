@@ -11,7 +11,7 @@ namespace Loger_Bloger
 {
     public class Program
     {
-        public static void Main() //komentar
+        public static void Main() //komentar jevta proba
         {
             // Baza podataka
             IBazaPodataka bazaPodataka = null; // TODO: Initialize the database with appropriate implementation
