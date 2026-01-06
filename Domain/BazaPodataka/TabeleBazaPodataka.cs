@@ -6,7 +6,7 @@ namespace Domain.BazaPodataka
     {
         public List<Korisnik> Korisnici { get; set; } = [];
         // TODO: Add other database tables as needed
-
+        public List<Paleta> Palete { get; set; } = [];
         public TabeleBazaPodataka() { }
     }
 }
