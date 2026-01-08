@@ -1,4 +1,5 @@
-﻿using Database.Repozitorijumi;
+﻿using Database.BazaPodataka;
+using Database.Repozitorijumi;
 using Domain.BazaPodataka;
 using Domain.Enumeracije;
 using Domain.Modeli;
@@ -16,7 +17,7 @@ namespace Loger_Bloger
         public static void Main() //komentar 
         {
             // Baza podataka
-            IBazaPodataka bazaPodataka = null; // TODO: Initialize the database with appropriate implementation
+            IBazaPodataka bazaPodataka = new XMLBazaPodataka(); // TODO: Initialize the database with appropriate implementation
 
             // Repozitorijumi
             IKorisniciRepozitorijum korisniciRepozitorijum = new KorisniciRepozitorijum(bazaPodataka);
