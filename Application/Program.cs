@@ -5,6 +5,8 @@ using Domain.Enumeracije;
 using Domain.Modeli;
 using Domain.Repozitorijumi;
 using Domain.Servisi;
+using Domain.Enumeracije;
+using Domain.PomocneMetode.VinovaLoza;
 using Presentation.Authentifikacija;
 using Presentation.Meni;
 using Services.AutenftikacioniServisi;
@@ -22,6 +24,7 @@ namespace Loger_Bloger
 
             // Repozitorijumi
             IKorisniciRepozitorijum korisniciRepozitorijum = new KorisniciRepozitorijum(bazaPodataka);
+            IVinoveLozeRepozitorijum vinoveLozeRepozitorijum = new VinoveLozeRepozitorijum(bazaPodataka);
             IPaletaRepozitorijum paletaRepozitorijum = new PaletaRepozitorijum(bazaPodataka);
 
             // Servisi
