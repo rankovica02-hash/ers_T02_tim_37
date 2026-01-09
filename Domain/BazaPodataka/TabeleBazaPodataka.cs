@@ -8,6 +8,7 @@ namespace Domain.BazaPodataka
         // TODO: Add other database tables as needed
         public List<VinovaLoza> VinoveLoze { get; set; } = [];
 
+        public List<Paleta> Palete { get; set; } = [];
         public TabeleBazaPodataka() { }
     }
 }

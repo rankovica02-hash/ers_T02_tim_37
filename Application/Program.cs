@@ -1,5 +1,7 @@
-﻿using Database.Repozitorijumi;
+﻿using Database.BazaPodataka;
+using Database.Repozitorijumi;
 using Domain.BazaPodataka;
+using Domain.Enumeracije;
 using Domain.Modeli;
 using Domain.Repozitorijumi;
 using Domain.Servisi;
@@ -8,27 +10,34 @@ using Domain.PomocneMetode.VinovaLoza;
 using Presentation.Authentifikacija;
 using Presentation.Meni;
 using Services.AutenftikacioniServisi;
+using Services.LoggerServisi;
+using Services.PaletaServisi;
 
 namespace Loger_Bloger
 {
     public class Program
     {
-        public static void Main()
+        public static void Main() //komentar 
         {
             // Baza podataka
-            IBazaPodataka bazaPodataka = null; // TODO: Initialize the database with appropriate implementation
+            IBazaPodataka bazaPodataka = new XMLBazaPodataka(); // TODO: Initialize the database with appropriate implementation
 
             // Repozitorijumi
             IKorisniciRepozitorijum korisniciRepozitorijum = new KorisniciRepozitorijum(bazaPodataka);
             IVinoveLozeRepozitorijum vinoveLozeRepozitorijum = new VinoveLozeRepozitorijum(bazaPodataka);
+            IPaletaRepozitorijum paletaRepozitorijum = new PaletaRepozitorijum(bazaPodataka);
 
             // Servisi
-            IAutentifikacijaServis autentifikacijaServis = new AutentifikacioniServis(); // TODO: Pass necessary dependencies
+            ILoggerServis loggerServis = new FileLoggerServis();
+            IAutentifikacijaServis autentifikacijaServis = new AutentifikacioniServis(korisniciRepozitorijum, loggerServis); // TODO: Pass necessary dependencies
             // TODO: Add other necessary services
+            IPaletaServis paletaServis = new PaletaServis(paletaRepozitorijum,loggerServis);
 
-            // Ako nema nijednog korisnika u sistemu, dodati dva nova
+            // Ako nema nijednog korisnika u sistemu,dodati dva nova
             if (korisniciRepozitorijum.SviKorisnici().Count() == 0)
             {
+                korisniciRepozitorijum.DodajKorisnika(new Korisnik("mare123", "sifra123", "Marko Markovic", TipKorisnika.GlavniEnolog));
+                korisniciRepozitorijum.DodajKorisnika(new Korisnik("pera321", "sifra321", "Pera Peric", TipKorisnika.KelarMajstor));
                 // TODO: Add initial users to the system
             }
 
@@ -44,7 +53,7 @@ namespace Loger_Bloger
             Console.Clear();
             Console.WriteLine($"Uspešno ste prijavljeni kao: {prijavljen.ImePrezime} ({prijavljen.Uloga})");
 
-            OpcijeMeni meni = new OpcijeMeni(); // TODO: Pass necessary dependencies
+            OpcijeMeni meni = new OpcijeMeni(paletaServis); // TODO: Pass necessary dependencies
             meni.PrikaziMeni();
         }
     }
