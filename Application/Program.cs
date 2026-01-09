@@ -3,6 +3,8 @@ using Domain.BazaPodataka;
 using Domain.Modeli;
 using Domain.Repozitorijumi;
 using Domain.Servisi;
+using Domain.Enumeracije;
+using Domain.PomocneMetode.VinovaLoza;
 using Presentation.Authentifikacija;
 using Presentation.Meni;
 using Services.AutenftikacioniServisi;
@@ -11,13 +13,14 @@ namespace Loger_Bloger
 {
     public class Program
     {
-        public static void Main() //komentar jevta proba
+        public static void Main()
         {
             // Baza podataka
             IBazaPodataka bazaPodataka = null; // TODO: Initialize the database with appropriate implementation
 
             // Repozitorijumi
             IKorisniciRepozitorijum korisniciRepozitorijum = new KorisniciRepozitorijum(bazaPodataka);
+            IVinoveLozeRepozitorijum vinoveLozeRepozitorijum = new VinoveLozeRepozitorijum(bazaPodataka);
 
             // Servisi
             IAutentifikacijaServis autentifikacijaServis = new AutentifikacioniServis(); // TODO: Pass necessary dependencies
