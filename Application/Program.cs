@@ -9,6 +9,7 @@ using Presentation.Authentifikacija;
 using Presentation.Meni;
 using Services.AutenftikacioniServisi;
 using Services.LoggerServisi;
+using Services.PaletaServisi;
 
 namespace Loger_Bloger
 {
@@ -21,13 +22,13 @@ namespace Loger_Bloger
 
             // Repozitorijumi
             IKorisniciRepozitorijum korisniciRepozitorijum = new KorisniciRepozitorijum(bazaPodataka);
-
-
+            IPaletaRepozitorijum paletaRepozitorijum = new PaletaRepozitorijum(bazaPodataka);
 
             // Servisi
             ILoggerServis loggerServis = new FileLoggerServis();
             IAutentifikacijaServis autentifikacijaServis = new AutentifikacioniServis(korisniciRepozitorijum, loggerServis); // TODO: Pass necessary dependencies
             // TODO: Add other necessary services
+            IPaletaServis paletaServis = new PaletaServis(paletaRepozitorijum,loggerServis);
 
             // Ako nema nijednog korisnika u sistemu,dodati dva nova
             if (korisniciRepozitorijum.SviKorisnici().Count() == 0)
@@ -49,7 +50,7 @@ namespace Loger_Bloger
             Console.Clear();
             Console.WriteLine($"Uspešno ste prijavljeni kao: {prijavljen.ImePrezime} ({prijavljen.Uloga})");
 
-            OpcijeMeni meni = new OpcijeMeni(); // TODO: Pass necessary dependencies
+            OpcijeMeni meni = new OpcijeMeni(paletaServis); // TODO: Pass necessary dependencies
             meni.PrikaziMeni();
         }
     }
