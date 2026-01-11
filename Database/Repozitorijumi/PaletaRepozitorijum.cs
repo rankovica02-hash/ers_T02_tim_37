@@ -8,9 +8,9 @@ namespace Database.Repozitorijumi
     public class PaletaRepozitorijum : IPaletaRepozitorijum
     {
         IBazaPodataka bazaPodataka;
-        public PaletaRepozitorijum(IBazaPodataka baza)
+        public PaletaRepozitorijum(IBazaPodataka bazaPodataka)
         {
-            bazaPodataka = baza;
+            this.bazaPodataka = bazaPodataka;
         }
         
         public Paleta DodajPaletu(Paleta paleta)

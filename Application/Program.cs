@@ -26,7 +26,8 @@ namespace Loger_Bloger
             IKorisniciRepozitorijum korisniciRepozitorijum = new KorisniciRepozitorijum(bazaPodataka);
             IVinoveLozeRepozitorijum vinoveLozeRepozitorijum = new VinoveLozeRepozitorijum(bazaPodataka);
             IVinaRepozitorijum vinaRepozitorijum = new VinaRepozitorijum(bazaPodataka);
-            IPaletaRepozitorijum paletaRepozitorijum = new PaletaRepozitorijum(bazaPodataka); 
+            IPaletaRepozitorijum paletaRepozitorijum = new PaletaRepozitorijum(bazaPodataka);
+            IVinskiPodrumRepozitorijum vinskiPodrumRepozitorijum = new VinskiPodrumiRepozitorijum(bazaPodataka);
 
             // Servisi
             ILoggerServis loggerServis = new FileLoggerServis();
