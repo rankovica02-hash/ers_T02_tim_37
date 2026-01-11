@@ -28,6 +28,7 @@ namespace Loger_Bloger
             IVinaRepozitorijum vinaRepozitorijum = new VinaRepozitorijum(bazaPodataka);
             IPaletaRepozitorijum paletaRepozitorijum = new PaletaRepozitorijum(bazaPodataka);
             IVinskiPodrumRepozitorijum vinskiPodrumRepozitorijum = new VinskiPodrumiRepozitorijum(bazaPodataka);
+            IKatalogVinaRepozitorijum katalogVinaRepozitorijum = new KataloziVinaRepozitorijum(bazaPodataka);
 
             // Servisi
             ILoggerServis loggerServis = new FileLoggerServis();
@@ -41,6 +42,23 @@ namespace Loger_Bloger
                 korisniciRepozitorijum.DodajKorisnika(new Korisnik("mare123", "sifra123", "Marko Markovic", TipKorisnika.GlavniEnolog));
                 korisniciRepozitorijum.DodajKorisnika(new Korisnik("pera321", "sifra321", "Pera Peric", TipKorisnika.KelarMajstor));
                 // TODO: Add initial users to the system
+            }
+
+            // Katalog vina (ako nema nijednog kataloga)
+            if(katalogVinaRepozitorijum.PronadjiSveKataloge().Count() == 0)
+            {
+                katalogVinaRepozitorijum.DodajKatalogVina(new KatalogVina { Naziv = "Katalog - dostupna vina", VinaIds = new List<long>() });
+            }
+
+            // Vinski podrumi
+            if(vinskiPodrumRepozitorijum.PronadjiSveVinskePodrume().Count() == 0)
+            {
+                vinskiPodrumRepozitorijum.DodajVinskiPodrum(new VinskiPodrum
+                {
+                    Naziv = "Podrum A",
+                    TemperaturaSkladistenja = 12.0,
+                    MaksimalanBrojPaleta = 10
+                });
             }
 
             // Prezentacioni sloj

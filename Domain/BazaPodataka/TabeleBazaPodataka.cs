@@ -11,6 +11,7 @@ namespace Domain.BazaPodataka
 
         public List<Paleta> Palete { get; set; } = [];
         public List<VinskiPodrum> VinskiPodrumi { get; set; } = [];
+        public List<KatalogVina> KataloziVina { get; set; } = [];
         public TabeleBazaPodataka() { }
     }
 }
