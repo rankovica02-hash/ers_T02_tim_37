@@ -12,6 +12,7 @@ using Presentation.Meni;
 using Services.AutenftikacioniServisi;
 using Services.LoggerServisi;
 using Services.PaletaServisi;
+using Services.VinogradarstvoServisi;
 
 namespace Loger_Bloger
 {
@@ -35,6 +36,7 @@ namespace Loger_Bloger
             IAutentifikacijaServis autentifikacijaServis = new AutentifikacioniServis(korisniciRepozitorijum, loggerServis); // TODO: Pass necessary dependencies
             // TODO: Add other necessary services
             IPaletaServis paletaServis = new PaletaServis(paletaRepozitorijum,loggerServis);
+            IVinogradarstvoServis vinogradarstvoServis = new VinogradarstvoServis(vinoveLozeRepozitorijum, loggerServis);
 
             // Ako nema nijednog korisnika u sistemu,dodati dva nova
             if (korisniciRepozitorijum.SviKorisnici().Count() == 0)
