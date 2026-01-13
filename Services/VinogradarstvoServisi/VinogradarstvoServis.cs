@@ -27,7 +27,7 @@ namespace Services.VinogradarstvoServisi
                     return new VinovaLoza();
                 }
 
-                float nivoSecera = 15.0f;
+                float nivoSecera = new Random().Next(15, 28);
                 int godinaProizvodnje = 2025;
                 string regionUzgoja = NasumicanRegionUzgojaHelper.GenerisiNasumicanRegionUzgoja();
 
@@ -63,6 +63,11 @@ namespace Services.VinogradarstvoServisi
                 // povećaj/smanji za procenat: npr 10 => +10%, -5 => -5%
                 float stariSecer = loza.NivoSecera;
                 float noviSecer = stariSecer * (1.0f + (procenat / 100.0f));
+
+                /* ili pocetna vrednost - 2.40 (sto ce biti procenat)
+                    float stariSecer = loza.NivoSecera;
+                    float noviSecer = stariSecer - procenat;
+                 */
 
                 //ogranicenje secera
                 if (noviSecer < 15.0f) 
