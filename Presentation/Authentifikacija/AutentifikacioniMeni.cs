@@ -29,7 +29,7 @@ namespace Presentation.Authentifikacija
                 switch (izbor)
                 {
                     case "1":
-                        if (Prijava(out korisnik))
+                        if (Prijava(out korisnik!))
                             return true;
                         break;
 
@@ -48,7 +48,7 @@ namespace Presentation.Authentifikacija
             }
         }
 
-             private bool Prijava(out Korisnik? korisnik)
+        private bool Prijava(out Korisnik? korisnik)
         {
             korisnik = new Korisnik();
             bool uspesnaPrijava;
