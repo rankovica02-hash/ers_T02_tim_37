@@ -78,7 +78,7 @@ namespace Services.Proizvodnja
                         float procenat = ((cilj - nova.NivoSecera) / nova.NivoSecera) * 100.0f;
                         lozaServis.PromeniNivoSeceraZaProcenat(nova.Id, procenat);
 
-                        obraneLoze.Add(nova);
+
                     }
 
                 }
