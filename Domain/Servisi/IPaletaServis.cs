@@ -1,5 +1,7 @@
 ﻿using Domain.Enumeracije;
 using Domain.Modeli;
+using Domain.Repozitorijumi;
+using Domain.Servisi;
 
 namespace Domain.Servisi
 {
