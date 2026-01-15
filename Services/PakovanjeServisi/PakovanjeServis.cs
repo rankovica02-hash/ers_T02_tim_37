@@ -12,9 +12,7 @@ namespace Services.PakovanjeServisi
         IPaletaRepozitorijum paletaRepozitorijum;
         ILoggerServis loggerServis;
         IProizvodnjaVinaServis proizvodnjaServis;
-        // treba jos proizvodnja vina servis 
-
-        //i ovde da se doda za proizvodnju
+ 
         public PakovanjeServis(IPaletaRepozitorijum paletaRepo, ILoggerServis logger, IProizvodnjaVinaServis proizvodnjaServ)
         {
             paletaRepozitorijum = paletaRepo;

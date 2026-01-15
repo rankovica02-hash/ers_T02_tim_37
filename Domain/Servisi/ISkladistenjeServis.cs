@@ -4,6 +4,6 @@ namespace Domain.Servisi
 {
     public interface ISkladistenjeServis
     {
-        bool PrimiOtpremljenuPaletu(Paleta paleta);
+        List<Paleta> IsporuciPaleteServisuProdaje(int brojPaleta);
     }
 }

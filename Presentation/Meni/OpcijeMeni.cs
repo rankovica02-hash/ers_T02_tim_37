@@ -5,10 +5,12 @@ namespace Presentation.Meni
 {
     public class OpcijeMeni
     {
-        private readonly IPaletaServis paletaServis;
-        public OpcijeMeni(IPaletaServis paleta)
+        IPaletaServis paletaServis;
+        ISkladistenjeServis skladistenjeServis;
+        public OpcijeMeni(IPaletaServis paleta, ISkladistenjeServis skladistenjeServ)
         {
             paletaServis = paleta;
+            skladistenjeServis = skladistenjeServ;
         }
         public void PrikaziMeni()
         {
@@ -20,6 +22,7 @@ namespace Presentation.Meni
                 // TODO: Prikaz opcija menija
                 Console.WriteLine("\n1. Kreiraj paletu");
                 Console.WriteLine("2. Prikaži palete");
+                Console.WriteLine("3. Zahtev za isporuku palete servisu prodaje");
                 Console.WriteLine("0. Izlaz");
                 Console.WriteLine("Opcija: ");
 
@@ -35,6 +38,10 @@ namespace Presentation.Meni
 
                     case '2':
                         PrikazPalete();
+                        break;
+
+                    case '3':
+                        ZahtevIsporukeServisuProdaje();
                         break;
 
                     case '0':
@@ -68,6 +75,19 @@ namespace Presentation.Meni
             {
                 Console.WriteLine($"Šifra: {p.Sifra},  odredište: {p.AdresaOdredista}, podrumId: {p.VinskiPodrumId}, status: {p.Status}");
             }
+        }
+
+       public void ZahtevIsporukeServisuProdaje()
+        {
+            Console.WriteLine("Unesite broj paleta za isporuku:");
+            string? unos = Console.ReadLine();
+            if(!int.TryParse(unos, out int brojPaleta))
+            {
+                Console.WriteLine("Unos nije validan. Molim Vas unesite ceo broj.");
+                return;
+            }
+            var palete = skladistenjeServis.IsporuciPaleteServisuProdaje(brojPaleta);
+            Console.WriteLine("Uspesna isporuka!");
         }
     }
 }
