@@ -73,7 +73,9 @@ namespace Loger_Bloger
 
             while (am.TryLogin(out prijavljen) == false)
             {
-                Console.WriteLine("Pogrešno korisničko ime ili lozinka. Pokušajte ponovo.");
+                if (prijavljen == null)
+                    return;
+                    Console.WriteLine("Pogrešno korisničko ime ili lozinka. Pokušajte ponovo.");
             }
 
             Console.Clear();

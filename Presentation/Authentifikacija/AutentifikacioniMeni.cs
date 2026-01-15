@@ -38,6 +38,7 @@ namespace Presentation.Authentifikacija
                         break;
 
                     case "0":
+                        korisnik = null;
                         return false;
 
                     default:
@@ -47,7 +48,7 @@ namespace Presentation.Authentifikacija
             }
         }
 
-             private bool Prijava(out Korisnik korisnik)
+             private bool Prijava(out Korisnik? korisnik)
         {
             korisnik = new Korisnik();
             bool uspesnaPrijava;
