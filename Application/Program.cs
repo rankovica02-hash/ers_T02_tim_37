@@ -3,17 +3,18 @@ using Database.Repozitorijumi;
 using Domain.BazaPodataka;
 using Domain.Enumeracije;
 using Domain.Modeli;
-using Domain.Repozitorijumi;
-using Domain.Servisi;
 using Domain.PomocneMetode.Vino;
 using Domain.PomocneMetode.VinovaLoza;
+using Domain.Repozitorijumi;
+using Domain.Servisi;
 using Presentation.Authentifikacija;
 using Presentation.Meni;
 using Services.AutenftikacioniServisi;
 using Services.LoggerServisi;
 using Services.PaletaServisi;
-using Services.VinogradarstvoServisi;
+using Services.ProdajaServisi;
 using Services.SkladistenjeServisi;
+using Services.VinogradarstvoServisi;
 
 namespace Loger_Bloger
 {
@@ -31,16 +32,17 @@ namespace Loger_Bloger
             IPaletaRepozitorijum paletaRepozitorijum = new PaletaRepozitorijum(bazaPodataka);
             IVinskiPodrumRepozitorijum vinskiPodrumRepozitorijum = new VinskiPodrumiRepozitorijum(bazaPodataka);
             IKatalogVinaRepozitorijum katalogVinaRepozitorijum = new KataloziVinaRepozitorijum(bazaPodataka);
-           
+            IFakturaRepozitorijum fakturaRepozitorijum = new FakturaRepozitorijum(bazaPodataka);
+
 
             // Servisi
             ILoggerServis loggerServis = new FileLoggerServis();
-            IAutentifikacijaServis autentifikacijaServis = new AutentifikacioniServis(korisniciRepozitorijum, loggerServis); // TODO: Pass necessary dependencies
-            // TODO: Add other necessary services
+            IAutentifikacijaServis autentifikacijaServis = new AutentifikacioniServis(korisniciRepozitorijum, loggerServis); 
             IPaletaServis paletaServis = new PaletaServis(paletaRepozitorijum,loggerServis);
             IVinogradarstvoServis vinogradarstvoServis = new VinogradarstvoServis(vinoveLozeRepozitorijum, loggerServis);
             ISkladistenjeServis skladistenjeKelarServis = new LokalniKelarSkladistenjeServis(paletaRepozitorijum, loggerServis);
             ISkladistenjeServis skladistenjeVinskiPodrumServis = new VinskiPodrumSkladistenjeServis(paletaRepozitorijum, loggerServis);
+            IFakturaPregledServis fakturaPregledServis = new ProdajaVinaServis(fakturaRepozitorijum, loggerServis);
 
             // Ako nema nijednog korisnika u sistemu,dodati dva nova
             if (korisniciRepozitorijum.SviKorisnici().Count() == 0)
