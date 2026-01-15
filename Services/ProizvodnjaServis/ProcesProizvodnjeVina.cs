@@ -2,11 +2,13 @@
 using Domain.Modeli;
 using Domain.Repozitorijumi;
 using Domain.Servisi;
+using Domain.PomocneMetode;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.PomocneMetode.Vino;
 
 namespace Services.Proizvodnja
 {
@@ -22,7 +24,7 @@ namespace Services.Proizvodnja
         {
             lozaServis = lozaservis;
             vinaRepozitorijum = vinarepozitorijum;
-            loggerServis = loggerservis;   
+            loggerServis = loggerservis;
         }
         public IEnumerable<Vino> PocetakFermentacije(KategorijaVina kategorija, int brojFlasa, ZapreminaFlase zapremina, string nazivSorte)
         {
@@ -75,17 +77,84 @@ namespace Services.Proizvodnja
 
                         float procenat = ((cilj - nova.NivoSecera) / nova.NivoSecera) * 100.0f;
                         lozaServis.PromeniNivoSeceraZaProcenat(nova.Id, procenat);
+
+                        obraneLoze.Add(nova);
                     }
 
                 }
 
+                double zapreminaULitrima = ((int)zapremina / 100.0);
+                DateTime datumFlasiranja = DateTime.Now;
 
+
+                int index = 0;
+                while (brojFlasa > 0)
+                {
+                    VinovaLoza loza = obraneLoze[index];
+                    index = (index + 1) % obraneLoze.Count;
+                    string naziv = NasumicanNazivVinaHelper.GenerisiNasumicanNazivVina();
+
+                    Vino novoVino = new Vino(
+                        0,
+                        naziv,
+                        kategorija,
+                        zapreminaULitrima,
+                        "",
+                        loza.Id,
+                        datumFlasiranja
+                        );
+                    Vino dodato = vinaRepozitorijum.DodajVino(novoVino);
+                    if (dodato.Id != 0)
+                    {
+                        proizvedenaVina.Add(dodato);
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                    brojFlasa--;
+                }
+                loggerServis.EvidentirajDogadjaj(TipEvidencije.INFO, $"Uspesno proizvedeno {proizvedenaVina.Count()} vina kategorije {kategorija}.");
+                return proizvedenaVina;
             }
-            catch { }
-            
-            throw new NotImplementedException();
+            catch
+            {
+                loggerServis.EvidentirajDogadjaj(TipEvidencije.ERROR, "Neuspesna fermentacija/proizvodnja vina.");
+                return [];
+            }
+
         }
 
+        public IEnumerable<Vino> ZahtevajProizvedenaVina(KategorijaVina kategorija, int brojFlasa, ZapreminaFlase zapremina, string nazivSorte)
+        {
+            try
+            {
+                IEnumerable<Vino> proizvedena = vinaRepozitorijum.PronadjiVinaPoKategoriji(kategorija);
+                List<Vino> trazenaVina = [];
+                double zapreminaULitrima = ((int)zapremina) / 100.0;
 
+                foreach (Vino v in proizvedena)
+                {
+                    if (v.Zapremina == zapreminaULitrima && brojFlasa > 0)
+                    {
+                        trazenaVina.Add(v);
+                        brojFlasa--;
+                    }
+                }
+                if (brojFlasa > 0)
+                {
+                    IEnumerable<Vino> novoProizvedena = PocetakFermentacije(kategorija, brojFlasa, zapremina, nazivSorte);
+                    trazenaVina.AddRange(novoProizvedena);
+                }
+                loggerServis.EvidentirajDogadjaj(TipEvidencije.INFO, $"Proizvedeno je {trazenaVina.Count} vina kategorije {kategorija}");
+                return trazenaVina;
+            }
+            catch
+            {
+                loggerServis.EvidentirajDogadjaj(TipEvidencije.ERROR, "Neuspesno dobijanje proizvedenih vina.");
+                return [];
+            }
+
+        }
     }
 }

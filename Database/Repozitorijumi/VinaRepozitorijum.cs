@@ -99,5 +99,28 @@ namespace Database.Repozitorijumi
                 return new List<Vino>();
             }
         }
+
+        public IEnumerable<Vino> PronadjiVinaPoKategoriji(KategorijaVina kategorija)
+        {
+            try
+            {
+                List<Vino> rezultat = new List<Vino>();
+
+                foreach (Vino vino in bazaPodataka.Tabele.Vina)
+                {
+                    if (vino.Kategorija == kategorija)
+                    {
+                        rezultat.Add(vino);
+                    }
+                }
+
+                return rezultat;
+            }
+            catch
+            {
+                return new List<Vino>();
+            }
+        }
+
     }
 }

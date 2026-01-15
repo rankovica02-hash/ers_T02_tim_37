@@ -11,5 +11,6 @@ namespace Domain.Servisi
     public interface IProizvodnjaVinaServis
     {
        IEnumerable<Vino> PocetakFermentacije(KategorijaVina kategorija, int brojFlasa, ZapreminaFlase zapremina, string nazivSorte);
+        IEnumerable<Vino> ZahtevajProizvedenaVina(KategorijaVina kategorija, int brojFlasa, ZapreminaFlase zapremina, string nazivSorte);
     }
 }
