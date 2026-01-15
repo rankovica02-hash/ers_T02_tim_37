@@ -12,7 +12,7 @@ using Domain.PomocneMetode.Vino;
 
 namespace Services.Proizvodnja
 {
-    public class ProcesProizvodnjeVina : IProizvodnjaVinaServis
+    public class ProizvodnjeVinaServis : IProizvodnjaVinaServis
     {
         IVinogradarstvoServis lozaServis;
         IVinaRepozitorijum vinaRepozitorijum;
@@ -20,7 +20,7 @@ namespace Services.Proizvodnja
 
         const int ClPoObranojLozi = 120;
         const float optimalanSecer = 24.0f;
-        public ProcesProizvodnjeVina(IVinogradarstvoServis lozaservis, IVinaRepozitorijum vinarepozitorijum, ILoggerServis loggerservis)
+        public ProizvodnjeVinaServis(IVinogradarstvoServis lozaservis, IVinaRepozitorijum vinarepozitorijum, ILoggerServis loggerservis)
         {
             lozaServis = lozaservis;
             vinaRepozitorijum = vinarepozitorijum;
