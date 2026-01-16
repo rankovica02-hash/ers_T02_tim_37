@@ -90,7 +90,7 @@ namespace Presentation.Meni
             Console.WriteLine("Uspesna isporuka!");
         }
 
-        /*private void IsporukaPaleta() isto kao ova andjina samo je moja, pa je bolja
+        /*private void ZahtevIsporukeServisuProdaje() //isto kao ova andjina samo je moja, pa je bolja
         {
             Console.Write("Unesi broj paleta za isporuku servisu prodaje: ");
             if (!int.TryParse(Console.ReadLine(), out int broj) || broj <= 0)
@@ -104,7 +104,7 @@ namespace Presentation.Meni
             Console.WriteLine($"Isporuceno paleta: {isporucene.Count}");
             foreach (var p in isporucene)
                 Console.WriteLine($"- {p.Sifra} (Id={p.Id}, Status={p.Status})");
-        }
-        */
+        }*/
+
     }
 }

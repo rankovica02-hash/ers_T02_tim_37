@@ -13,7 +13,7 @@ namespace Services.SkladistenjeServisi
         ILoggerServis loggerServis;
 
         const int REDOVNA_ISPORUKA_BROJA_PALETA = IsporukaBrojaPaletaKonstante.REDOVNA_ISPORUKA_BROJA_PALETA;
-        const int REDOVNA_ISPORUKA_TRAJANJE_SEKUNDE = 1800;
+        const int REDOVNA_ISPORUKA_TRAJANJE_SEKUNDE = VremeIsporukaPaleta.REDOVNA_ISPORUKA_PALETA_SEKUNDE;
 
         public LokalniKelarSkladistenjeServis(IPaletaRepozitorijum paletaRepo, ILoggerServis logger)
         {

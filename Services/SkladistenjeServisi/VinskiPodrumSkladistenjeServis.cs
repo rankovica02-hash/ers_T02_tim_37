@@ -13,7 +13,7 @@ namespace Services.SkladistenjeServisi
         ILoggerServis loggerServis;
 
         const int BRZA_ISPORUKA_BROJA_PALETA = IsporukaBrojaPaletaKonstante.BRZA_ISPORUKA_BROJA_PALETA;
-        const int BRZA_ISPORUKA_TRAJANJE_SEKUNDE = 300;
+        const int BRZA_ISPORUKA_TRAJANJE_SEKUNDE = VremeIsporukaPaleta.BRZA_ISPORUKA_PALETA_SEKUNDE;
 
 
         public VinskiPodrumSkladistenjeServis(IPaletaRepozitorijum paletaRepo, ILoggerServis logger)
