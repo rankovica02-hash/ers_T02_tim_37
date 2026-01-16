@@ -7,6 +7,7 @@ using Domain.Repozitorijumi;
 using Domain.Servisi;
 using Domain.PomocneMetode.Vino;
 using Domain.PomocneMetode.VinovaLoza;
+using Domain.Konstante;
 using Presentation.Authentifikacija;
 using Presentation.Meni;
 using Services.AutenftikacioniServisi;
@@ -39,8 +40,7 @@ namespace Loger_Bloger
             // TODO: Add other necessary services
             IPaletaServis paletaServis = new PaletaServis(paletaRepozitorijum,loggerServis);
             IVinogradarstvoServis vinogradarstvoServis = new VinogradarstvoServis(vinoveLozeRepozitorijum, loggerServis);
-            ISkladistenjeServis skladistenjeKelarServis = new LokalniKelarSkladistenjeServis(paletaRepozitorijum, loggerServis);
-            ISkladistenjeServis skladistenjeVinskiPodrumServis = new VinskiPodrumSkladistenjeServis(paletaRepozitorijum, loggerServis);
+            ISkladistenjeServis skladistenjeServis;
 
             // Ako nema nijednog korisnika u sistemu,dodati dva nova
             if (korisniciRepozitorijum.SviKorisnici().Count() == 0)
@@ -81,7 +81,16 @@ namespace Loger_Bloger
             Console.Clear();
             Console.WriteLine($"Uspešno ste prijavljeni kao: {prijavljen.ImePrezime} ({prijavljen.Uloga})");
 
-            OpcijeMeni meni = new OpcijeMeni(paletaServis, skladistenjeKelarServis); // TODO: Pass necessary dependencies
+            if (prijavljen.Uloga == TipKorisnika.GlavniEnolog)
+            {
+                skladistenjeServis = new VinskiPodrumSkladistenjeServis(paletaRepozitorijum, loggerServis);
+            }
+            else 
+            {
+                skladistenjeServis = new LokalniKelarSkladistenjeServis(paletaRepozitorijum, loggerServis);
+            }
+
+            OpcijeMeni meni = new OpcijeMeni(paletaServis, skladistenjeServis); // TODO: Pass necessary dependencies
             meni.PrikaziMeni();
         }
     }

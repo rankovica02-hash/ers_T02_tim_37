@@ -2,6 +2,7 @@
 using Domain.Modeli;
 using Domain.Repozitorijumi;
 using Domain.Servisi;
+using Domain.Konstante;
 
 
 namespace Services.SkladistenjeServisi
@@ -10,6 +11,10 @@ namespace Services.SkladistenjeServisi
     {
         IPaletaRepozitorijum paletaRepozitorijum;
         ILoggerServis loggerServis;
+
+        const int BRZA_ISPORUKA_BROJA_PALETA = IsporukaBrojaPaletaKonstante.BRZA_ISPORUKA_BROJA_PALETA;
+        const int BRZA_ISPORUKA_TRAJANJE_SEKUNDE = 300;
+
 
         public VinskiPodrumSkladistenjeServis(IPaletaRepozitorijum paletaRepo, ILoggerServis logger)
         {
@@ -23,27 +28,42 @@ namespace Services.SkladistenjeServisi
             {
                 if (brojPaleta <= 0)
                 {
-                    loggerServis.EvidentirajDogadjaj(TipEvidencije.WARNING, "Broj paleta za isporuku nije validan.");
+                    loggerServis.EvidentirajDogadjaj(TipEvidencije.WARNING, "Vinski podrum: Broj paleta za isporuku nije validan.");
                     return new List<Paleta>();
                 }
-                int maxPoIsporuci = 5;
-                int kolicina = Math.Min(brojPaleta, maxPoIsporuci);
 
-                var palete = paletaRepozitorijum.PronadjiPaletePoStatusu(TipStatusaPalete.OTPREMLJENA).Take(kolicina).ToList();
-                if(palete.Count() == 0)
+                List<Paleta> isporucene = new();
+                int preostalo = brojPaleta;
+
+                while (preostalo > 0)
                 {
-                    loggerServis.EvidentirajDogadjaj(TipEvidencije.WARNING, "Otpremljene palete nisu dostupne u vinskom podrumu.");
+                    int tura = Math.Min(BRZA_ISPORUKA_BROJA_PALETA, preostalo);
+
+                    var spremne = paletaRepozitorijum.PronadjiPaletePoStatusu(TipStatusaPalete.OTPREMLJENA).Take(tura).ToList();
+
+                    if (spremne.Count == 0)
+                    {
+                        loggerServis.EvidentirajDogadjaj(TipEvidencije.WARNING, "Vinski podrum: Nema dostupnih OTPREMLJENIH paleta za isporuku.");
+                        break; // da bi se dostavila isporucena, da ne vratimo praznu listu
+                    }
+
+                    // 0.3s po paleti
+                    Task.Delay(spremne.Count * BRZA_ISPORUKA_TRAJANJE_SEKUNDE).Wait();
+
+                    isporucene.AddRange(spremne);
+                    preostalo -= spremne.Count;
+
+                    loggerServis.EvidentirajDogadjaj(TipEvidencije.INFO, $"Vinski podrum: Isporuceno {spremne.Count} paleta u turi (max 5). Preostalo: {preostalo}.");
                 }
-                else
-                {
-                    loggerServis.EvidentirajDogadjaj(TipEvidencije.INFO, $"Vinski podrum isporucuje palete servisu prodaje. Broj paleta: {palete.Count()}.");
-                }
-                return palete;
+
+                loggerServis.EvidentirajDogadjaj(TipEvidencije.INFO, $"Vinski podrum: Ukupno isporuceno {isporucene.Count} paleta za zahtev {brojPaleta}.");
+
+                return isporucene;
             }
 
             catch
             {
-                loggerServis.EvidentirajDogadjaj(TipEvidencije.ERROR, "Greska prilikom dostavljanja paleta servisu prodaje!");
+                loggerServis.EvidentirajDogadjaj(TipEvidencije.ERROR, "Vinski podrum: Greska prilikom dostavljanja paleta servisu prodaje!");
                 return new List<Paleta>();
             }
            
