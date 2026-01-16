@@ -23,6 +23,7 @@ namespace Presentation.Meni
                 Console.WriteLine("\n1. Kreiraj paletu");
                 Console.WriteLine("2. Prikaži palete");
                 Console.WriteLine("3. Zahtev za isporuku palete servisu prodaje");
+                Console.WriteLine("4. Otpremi paletu (UPAKOVANA -> OTPREMLJENA)");
                 Console.WriteLine("0. Izlaz");
                 Console.WriteLine("Opcija: ");
 
@@ -43,6 +44,11 @@ namespace Presentation.Meni
                     case '3':
                         ZahtevIsporukeServisuProdaje();
                         break;
+
+                    case '4':
+                        OtpremiPaleteMeni();
+                        break;
+
 
                     case '0':
                         kraj = true;
@@ -77,34 +83,54 @@ namespace Presentation.Meni
             }
         }
 
-       public void ZahtevIsporukeServisuProdaje()
+        private void OtpremiPaleteMeni()
         {
-            Console.WriteLine("Unesite broj paleta za isporuku:");
-            string? unos = Console.ReadLine();
-            if(!int.TryParse(unos, out int brojPaleta))
-            {
-                Console.WriteLine("Unos nije validan. Molim Vas unesite ceo broj.");
-                return;
-            }
-            var palete = skladistenjeServis.IsporuciPaleteServisuProdaje(brojPaleta);
-            Console.WriteLine("Uspesna isporuka!");
-        }
-
-        /*private void ZahtevIsporukeServisuProdaje() //isto kao ova andjina samo je moja, pa je bolja
-        {
-            Console.Write("Unesi broj paleta za isporuku servisu prodaje: ");
+            Console.Write("Unesite broj paleta za otpremu: ");
             if (!int.TryParse(Console.ReadLine(), out int broj) || broj <= 0)
             {
                 Console.WriteLine("Neispravan broj.");
                 return;
             }
 
-            var isporucene = skladistenjeServis.IsporuciPaleteServisuProdaje(broj).ToList();
+            var otpremljene = paletaServis.OtpremiPalete(broj);
 
-            Console.WriteLine($"Isporuceno paleta: {isporucene.Count}");
-            foreach (var p in isporucene)
+            if (otpremljene.Count == 0)
+            {
+                Console.WriteLine("Nema paleta koje mogu da se otpreme.");
+                return;
+            }
+
+            Console.WriteLine($"Otpremljeno paleta: {otpremljene.Count}");
+            foreach (var p in otpremljene)
+            {
                 Console.WriteLine($"- {p.Sifra} (Id={p.Id}, Status={p.Status})");
-        }*/
+            }
+        }
+
+
+
+        public void ZahtevIsporukeServisuProdaje()
+        {
+            Console.WriteLine("Unesite broj paleta za isporuku:");
+            string? unos = Console.ReadLine();
+            if (!int.TryParse(unos, out int brojPaleta) || brojPaleta <= 0)
+            {
+                Console.WriteLine("Unos nije validan. Molim Vas unesite ceo pozitivan broj.");
+                return;
+            }
+
+            var palete = skladistenjeServis.IsporuciPaleteServisuProdaje(brojPaleta);
+
+            if (palete.Count == 0)
+            {
+                Console.WriteLine("Nema OTPREMLJENIH paleta za isporuku (0 isporuceno).");
+                return;
+            }
+
+            Console.WriteLine($"Uspesna isporuka! Isporuceno: {palete.Count}");
+            foreach (var p in palete)
+                Console.WriteLine($"- {p.Sifra} (Id={p.Id}, Status={p.Status})");
+        }
 
     }
 }
