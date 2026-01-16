@@ -42,8 +42,6 @@ namespace Loger_Bloger
             IPaletaServis paletaServis = new PaletaServis(paletaRepozitorijum,loggerServis);
             IVinogradarstvoServis vinogradarstvoServis = new VinogradarstvoServis(vinoveLozeRepozitorijum, loggerServis);
             ISkladistenjeServis skladistenjeServis;
-            ISkladistenjeServis skladistenjeKelarServis = new LokalniKelarSkladistenjeServis(paletaRepozitorijum, loggerServis);
-            ISkladistenjeServis skladistenjeVinskiPodrumServis = new VinskiPodrumSkladistenjeServis(paletaRepozitorijum, loggerServis);
             IFakturaPregledServis fakturaPregledServis = new ProdajaVinaServis(fakturaRepozitorijum, loggerServis);
 
             // Ako nema nijednog korisnika u sistemu,dodati dva nova
