@@ -2,6 +2,7 @@
 using Domain.Modeli;
 using Domain.Repozitorijumi;
 using Domain.Servisi;
+using Domain.Konstante;
 
 
 namespace Services.SkladistenjeServisi
@@ -10,6 +11,9 @@ namespace Services.SkladistenjeServisi
     {
         IPaletaRepozitorijum paletaRepozitorijum;
         ILoggerServis loggerServis;
+
+        const int REDOVNA_ISPORUKA_BROJA_PALETA = IsporukaBrojaPaletaKonstante.REDOVNA_ISPORUKA_BROJA_PALETA;
+        const int REDOVNA_ISPORUKA_TRAJANJE_SEKUNDE = 1800;
 
         public LokalniKelarSkladistenjeServis(IPaletaRepozitorijum paletaRepo, ILoggerServis logger)
         {
@@ -23,27 +27,42 @@ namespace Services.SkladistenjeServisi
             {
                 if (brojPaleta <= 0)
                 {
-                    loggerServis.EvidentirajDogadjaj(TipEvidencije.WARNING, "Broj paleta za isporuku nije validan.");
+                    loggerServis.EvidentirajDogadjaj(TipEvidencije.WARNING, "Lokalni Kelar: Broj paleta za isporuku nije validan.");
                     return new List<Paleta>();
                 }
-                int maxPoIsporuci = 2;
-                int kolicina = Math.Min(brojPaleta, maxPoIsporuci);
 
-                var palete = paletaRepozitorijum.PronadjiPaletePoStatusu(TipStatusaPalete.OTPREMLJENA).Take(kolicina).ToList();
-                if (palete.Count() == 0)
+                List<Paleta> isporucene = new();
+                int preostalo = brojPaleta;
+
+                while (preostalo > 0)
                 {
-                    loggerServis.EvidentirajDogadjaj(TipEvidencije.WARNING, "Otpremljene palete nisu dostupne kod lokalnog kelara.");
+                    int tura = Math.Min(REDOVNA_ISPORUKA_BROJA_PALETA, preostalo);
+
+                    var spremne = paletaRepozitorijum.PronadjiPaletePoStatusu(TipStatusaPalete.OTPREMLJENA).Take(tura).ToList();
+
+                    if (spremne.Count == 0)
+                    {
+                        loggerServis.EvidentirajDogadjaj(TipEvidencije.WARNING, "Lokalni Kelar: Nema dostupnih OTPREMLJENIH paleta za isporuku.");
+                        break; // da bi se dostavile isporucene palete, da ne vratimo praznu listu
+                    }
+
+                    // 1.8s po paleti
+                    Task.Delay(spremne.Count * REDOVNA_ISPORUKA_TRAJANJE_SEKUNDE).Wait();
+
+                    isporucene.AddRange(spremne);
+                    preostalo -= spremne.Count;
+
+                    loggerServis.EvidentirajDogadjaj(TipEvidencije.INFO, $"Lokalni Kelar: Isporuceno {spremne.Count} paleta u turi (max 2). Preostalo: {preostalo}.");
                 }
-                else
-                {
-                    loggerServis.EvidentirajDogadjaj(TipEvidencije.INFO, $"Lokalni kelar isporucuje palete servisu prodaje. Broj paleta: {palete.Count()}.");
-                }
-                return palete;
+
+                loggerServis.EvidentirajDogadjaj(TipEvidencije.INFO, $"Lokalni Kelar: Ukupno isporuceno {isporucene.Count} paleta za zahtev {brojPaleta}.");
+
+                return isporucene;
             }
 
             catch
             {
-                loggerServis.EvidentirajDogadjaj(TipEvidencije.ERROR, "Greska prilikom dostavljanja paleta kod lokalnog kelara servisu prodaje!");
+                loggerServis.EvidentirajDogadjaj(TipEvidencije.ERROR, "Lokalni Kelar: Greska prilikom dostavljanja paleta servisu prodaje!");
                 return new List<Paleta>();
             }
 
