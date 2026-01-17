@@ -4,18 +4,24 @@
     {
         private static readonly Random random = new();
 
-        private static readonly List<string> Nazivi = new()
+        public static readonly List<string> Nazivi = new()
         {
             "Merlot",
             "Cabernet Sauvignon",
             "Chardonnay",
             "Sauvignon Blanc",
             "Pinot Noir",
+            "Pinot Grigo",
+            "Pinot Blanc",
             "Riesling",
             "Syrah",
             "Malbec",
             "Prokupac",
-            "Tamjanika"
+            "Tamjanika",
+            "Kadarka",
+            "Tri Morave",
+            "Eclater",
+            "4 konja debela"
         };
 
         public static string GenerisiNasumicanNazivVina()
