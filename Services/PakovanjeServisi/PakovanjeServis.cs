@@ -20,7 +20,7 @@ namespace Services.PakovanjeServisi
             proizvodnjaServis = proizvodnjaServ;
         }
 
-        public Paleta SpakujVinaUNovuPaletu(KategorijaVina kategorija, int brojFlasa, ZapreminaFlase zapremina, string nazivSorte, string adresaOdredista, long vinskiPodrumId)
+        public Paleta SpakujVinaUNovuPaletu(KategorijaVina kategorija, int brojFlasa, double zapreminaFlase, string nazivSorte, string adresaOdredista, long vinskiPodrumId)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace Services.PakovanjeServisi
                     return new Paleta();
                 }
 
-                IEnumerable<Vino> vina = proizvodnjaServis.ZahtevajProizvedenaVina(kategorija, brojFlasa, zapremina, nazivSorte);
+                IEnumerable<Vino> vina = proizvodnjaServis.ZahtevajProizvedenaVina(kategorija, brojFlasa, zapreminaFlase, nazivSorte);
                 List<Vino> listaVina = vina.ToList();
 
 
@@ -78,23 +78,17 @@ namespace Services.PakovanjeServisi
         }
 
         // za slanje palete u podrum
-        public Paleta PosaljiPaletuUVinskiPodrum(KategorijaVina kategorija, int brojFlasa, ZapreminaFlase zapremina, string nazivSorte, string adresaOdredista, long vinskiPodrumId)
+        public Paleta PosaljiPaletuUVinskiPodrum(Paleta paleta, long vinskiPodrumId)
         {
             try
             {
-                // prva dostupna paleta koja je upakovana
-                Paleta paleta = paletaRepozitorijum.PronadjiPaletePoStatusu(TipStatusaPalete.UPAKOVANA).FirstOrDefault();
-                if (paleta == null || paleta.Id == 0)
+
+                if (paleta == null || paleta.Id == 0 || vinskiPodrumId <= 0)
                 {
-                    loggerServis.EvidentirajDogadjaj(TipEvidencije.INFO, "Trenutno nema upakovanih paleta, zapocinjanje novog pakovanja.");
-
-                    paleta = SpakujVinaUNovuPaletu(kategorija,brojFlasa,zapremina, nazivSorte, adresaOdredista, vinskiPodrumId);
-
-                    if(paleta.Id == 0)
+                    loggerServis.EvidentirajDogadjaj(TipEvidencije.WARNING, "Paleta/podrum nisu validni.");
                     return new Paleta();
                 }
 
-                // jedna paleta u jedan podrum
                 if(paleta.Status == TipStatusaPalete.OTPREMLJENA)
                 {
                     loggerServis.EvidentirajDogadjaj(TipEvidencije.WARNING, "Paleta je vec poslata!");

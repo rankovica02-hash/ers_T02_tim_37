@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Enumeracije
+namespace Domain.Konstante
 {
-    public enum ZapreminaFlase
+    public static class BrojVinaPoPaleti
     {
-        L_075 = 75,
-        L_150 = 150
+        public const int brojVinaPoPaleti = 20;
     }
 }

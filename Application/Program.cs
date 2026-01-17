@@ -42,7 +42,7 @@ namespace Loger_Bloger
             IPaletaServis paletaServis = new PaletaServis(paletaRepozitorijum,loggerServis);
             IVinogradarstvoServis vinogradarstvoServis = new VinogradarstvoServis(vinoveLozeRepozitorijum, loggerServis);
             ISkladistenjeServis skladistenjeServis;
-            IFakturaPregledServis fakturaPregledServis = new ProdajaVinaServis(fakturaRepozitorijum, loggerServis);
+            IFakturaPregledServis fakturaPregledServis = new FakturaPregledServis(fakturaRepozitorijum, loggerServis);
 
             // Ako nema nijednog korisnika u sistemu,dodati dva nova
             if (korisniciRepozitorijum.SviKorisnici().Count() == 0)

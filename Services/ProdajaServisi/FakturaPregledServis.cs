@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace Services.ProdajaServisi
 {
-    public class ProdajaVinaServis : IFakturaPregledServis
+    public class FakturaPregledServis : IFakturaPregledServis
     {
         IFakturaRepozitorijum fakturaRepozitorijum;
         ILoggerServis loggerServis;
-        public ProdajaVinaServis(IFakturaRepozitorijum fakturaRepozitorijum, ILoggerServis loggerServis)
+        public FakturaPregledServis(IFakturaRepozitorijum fakturaRepozitorijum, ILoggerServis loggerServis)
         {
             this.fakturaRepozitorijum = fakturaRepozitorijum;
             this.loggerServis = loggerServis;
