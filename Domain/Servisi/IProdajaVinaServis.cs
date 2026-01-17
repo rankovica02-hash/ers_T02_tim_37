@@ -12,7 +12,7 @@ namespace Domain.Servisi
     {
 
         IEnumerable<Vino> PrikaziKatalog();
-        Faktura Prodaj(long vinoId, int brojFlasa, TipProdaje tipProdaje, NacinPlacanja nacinPlacanja);
+        Faktura ProdajaIzKataloga(long vinoId, int brojFlasa, TipProdaje tipProdaje, NacinPlacanja nacinPlacanja);
         IEnumerable<Faktura> PregledSvihFaktura();
     }
 }

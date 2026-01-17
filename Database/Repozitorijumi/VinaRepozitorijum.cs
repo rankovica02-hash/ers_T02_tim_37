@@ -55,7 +55,7 @@ namespace Database.Repozitorijumi
             }
         }
 
-        public Vino PronadjiVinoPoId(long id)
+        public Vino? PronadjiVinoPoId(long id)
         {
             try
             {
@@ -67,11 +67,11 @@ namespace Database.Repozitorijumi
                     }
                 }
 
-                return new Vino();
+                return null;
             }
             catch
             {
-                return new Vino();
+                return null;
             }
         }
 

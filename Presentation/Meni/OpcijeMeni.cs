@@ -7,10 +7,12 @@ namespace Presentation.Meni
     {
         IPaletaServis paletaServis;
         ISkladistenjeServis skladistenjeServis;
-        public OpcijeMeni(IPaletaServis paleta, ISkladistenjeServis skladistenjeServ)
+        IProdajaVinaServis prodajaServis;
+        public OpcijeMeni(IPaletaServis paleta, ISkladistenjeServis skladistenjeServ, IProdajaVinaServis prodaja)
         {
             paletaServis = paleta;
             skladistenjeServis = skladistenjeServ;
+            prodajaServis = prodaja;
         }
         public void PrikaziMeni()
         {
@@ -24,6 +26,7 @@ namespace Presentation.Meni
                 Console.WriteLine("2. Prikaži palete");
                 Console.WriteLine("3. Zahtev za isporuku palete servisu prodaje");
                 Console.WriteLine("4. Otpremi paletu (UPAKOVANA -> OTPREMLJENA)");
+                Console.WriteLine("5. Prodaja vina (katalog -> faktura)"); //
                 Console.WriteLine("0. Izlaz");
                 Console.WriteLine("Opcija: ");
 
@@ -49,6 +52,9 @@ namespace Presentation.Meni
                         OtpremiPaleteMeni();
                         break;
 
+                    case '5':
+                        ProdajaVinaMeni();
+                        break;
 
                     case '0':
                         kraj = true;
@@ -130,6 +136,96 @@ namespace Presentation.Meni
             Console.WriteLine($"Uspesna isporuka! Isporuceno: {palete.Count}");
             foreach (var p in palete)
                 Console.WriteLine($"- {p.Sifra} (Id={p.Id}, Status={p.Status})");
+        }
+
+        private void ProdajaVinaMeni()
+        {
+            var katalog = prodajaServis.PrikaziKatalog().ToList();
+            if (katalog.Count == 0)
+            {
+                Console.WriteLine("Katalog je prazan.");
+                return;
+            }
+
+            Console.WriteLine("\n=== KATALOG VINA ===");
+            foreach (var v in katalog)
+            {
+                // ako se u Vino klasi drugačije zovu polja, ovde samo zameni
+                Console.WriteLine($"Id={v.Id} | {v.Naziv}");
+            }
+
+            Console.Write("Unesite ID vina: ");
+            if (!long.TryParse(Console.ReadLine(), out long vinoId))
+            {
+                Console.WriteLine("Neispravan ID vina.");
+                return;
+            }
+
+            Console.Write("Unesite broj flasa: ");
+            if (!int.TryParse(Console.ReadLine(), out int brojFlasa) || brojFlasa <= 0)
+            {
+                Console.WriteLine("Neispravan broj flasa.");
+                return;
+            }
+
+            // TIP PRODAJE
+            TipProdaje tipProdaje = UcitajTipProdaje();
+            // NACIN PLACANJA
+            NacinPlacanja nacinPlacanja = UcitajNacinPlacanja();
+
+            var faktura = prodajaServis.ProdajaIzKataloga(vinoId, brojFlasa, tipProdaje, nacinPlacanja);
+
+            if (faktura.Stavke.Count == 0)
+            {
+                Console.WriteLine("Prodaja nije uspela.");
+                return;
+            }
+
+            Console.WriteLine($"\n=== FAKTURA {faktura.Id} ===");
+            Console.WriteLine($"Datum: {faktura.DatumIzdavanja}");
+            Console.WriteLine($"Tip prodaje: {faktura.TipProdaje}");
+            Console.WriteLine($"Način plaćanja: {faktura.NacinPlacanja}");
+
+            foreach (var s in faktura.Stavke)
+                Console.WriteLine($"- {s.NazivVina} x{s.Kolicina} = {s.UkupnaCena}");
+
+            Console.WriteLine($"UKUPNO: {faktura.UkupanIznos}");
+        }
+
+        private static TipProdaje UcitajTipProdaje()
+        {
+            while (true)
+            {
+                Console.WriteLine("\nIzaberite tip prodaje:");
+                Console.WriteLine("1 - Restoranska prodaja");
+                Console.WriteLine("2 - Diskont pića");
+                Console.Write("Opcija: ");
+
+                string? izbor = Console.ReadLine();
+                if (izbor == "1") return TipProdaje.RESTORANSKA_PRODAJA;
+                if (izbor == "2") return TipProdaje.DISKONT_PICA;
+
+                Console.WriteLine("Neispravan izbor. Pokušaj ponovo.");
+            }
+        }
+
+        private static NacinPlacanja UcitajNacinPlacanja()
+        {
+            while (true)
+            {
+                Console.WriteLine("\nIzaberite način plaćanja:");
+                Console.WriteLine("1 - Gotovina");
+                Console.WriteLine("2 - Predračun");
+                Console.WriteLine("3 - Gotovinski račun");
+                Console.Write("Opcija: ");
+
+                string? izbor = Console.ReadLine();
+                if (izbor == "1") return NacinPlacanja.GOTOVINA;
+                if (izbor == "2") return NacinPlacanja.PREDRACUN;
+                if (izbor == "3") return NacinPlacanja.GOTOVINSKI_RACUN;
+
+                Console.WriteLine("Neispravan izbor. Pokušaj ponovo.");
+            }
         }
 
     }

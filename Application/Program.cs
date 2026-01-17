@@ -41,8 +41,7 @@ namespace Loger_Bloger
             IAutentifikacijaServis autentifikacijaServis = new AutentifikacioniServis(korisniciRepozitorijum, loggerServis); 
             IPaletaServis paletaServis = new PaletaServis(paletaRepozitorijum,loggerServis);
             IVinogradarstvoServis vinogradarstvoServis = new VinogradarstvoServis(vinoveLozeRepozitorijum, loggerServis);
-            ISkladistenjeServis skladistenjeServis;
-            IFakturaPregledServis fakturaPregledServis = new ProdajaVinaServis(fakturaRepozitorijum, loggerServis);
+            ISkladistenjeServis skladistenjeServis = null!;
 
             // Ako nema nijednog korisnika u sistemu,dodati dva nova
             if (korisniciRepozitorijum.SviKorisnici().Count() == 0)
@@ -52,14 +51,24 @@ namespace Loger_Bloger
                 // TODO: Add initial users to the system
             }
 
-            // Katalog vina (ako nema nijednog kataloga)
             if(katalogVinaRepozitorijum.PronadjiSveKataloge().Count() == 0)
             {
                 katalogVinaRepozitorijum.DodajKatalogVina(new KatalogVina { Naziv = "Katalog - dostupna vina", VinaIds = new List<long>() });
             }
+            var katalog = katalogVinaRepozitorijum.PronadjiSveKataloge().First();
+            if (katalog.VinaIds == null) katalog.VinaIds = new List<long>();
+
+            if (katalog.VinaIds.Count == 0)
+            {
+                var v1 = vinaRepozitorijum.DodajVino(new Vino(0, "Merlot", KategorijaVina.KVALITETNO_VINO, 0.75, "", 1, DateTime.Now));
+                var v2 = vinaRepozitorijum.DodajVino(new Vino(0, "Cabernet", KategorijaVina.PREMIJUM_VINO, 0.75, "", 1, DateTime.Now));
+                var v3 = vinaRepozitorijum.DodajVino(new Vino(0, "Chardonnay", KategorijaVina.STOLNO_VINO, 0.75, "", 1, DateTime.Now));
+
+                katalogVinaRepozitorijum.AzurirajKatalogVina(katalog);
+            }
 
             // Vinski podrumi
-            if(vinskiPodrumRepozitorijum.PronadjiSveVinskePodrume().Count() == 0)
+            if (vinskiPodrumRepozitorijum.PronadjiSveVinskePodrume().Count() == 0)
             {
                 vinskiPodrumRepozitorijum.DodajVinskiPodrum(new VinskiPodrum
                 {
@@ -77,6 +86,7 @@ namespace Loger_Bloger
             {
                 if (prijavljen == null)
                     return;
+
                     Console.WriteLine("Pogrešno korisničko ime ili lozinka. Pokušajte ponovo.");
             }
 
@@ -92,7 +102,15 @@ namespace Loger_Bloger
                 skladistenjeServis = new LokalniKelarSkladistenjeServis(paletaRepozitorijum, loggerServis);
             }
 
-            OpcijeMeni meni = new OpcijeMeni(paletaServis, skladistenjeServis); // TODO: Pass necessary dependencies
+            IProdajaVinaServis prodajaServis = new ProdajaVinaServis(
+                fakturaRepozitorijum,
+                katalogVinaRepozitorijum,
+                vinaRepozitorijum,
+                skladistenjeServis,
+                loggerServis
+            );
+
+            OpcijeMeni meni = new OpcijeMeni(paletaServis, skladistenjeServis, prodajaServis); // TODO: Pass necessary dependencies
             meni.PrikaziMeni();
         }
     }
