@@ -18,7 +18,6 @@
             "Tamjanika"
         };
 
-
         public static string GenerisiNasumicanNazivVina()
         {
             int index = random.Next(Nazivi.Count);
