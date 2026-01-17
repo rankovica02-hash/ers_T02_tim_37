@@ -1,11 +1,13 @@
 ﻿using Domain.Enumeracije;
 using Domain.Modeli;
 using Domain.Servisi;
+using Domain.PomocneMetode.Vino;
 namespace Presentation.Meni
 {
     public class OpcijeMeni
     {
         IProdajaVinaServis prodajaServis;
+
         public OpcijeMeni(IProdajaVinaServis prodajaServis)
         {
             this.prodajaServis = prodajaServis;
@@ -53,18 +55,29 @@ namespace Presentation.Meni
 
         private void PrikaziKatalog()
         {
-            var vina = prodajaServis.PrikaziKatalog().ToList();
-            Console.WriteLine("\n=== KATALOG VINA ===");
-
-            if (vina.Count == 0)
+            var ponuda = NasumicanNazivVinaHelper.Nazivi;
+            Console.WriteLine("+---------------------------------------------+");
+            Console.WriteLine("|               KATALOG VINA                  |");
+            Console.WriteLine("+---------------------------------------------+");
+            Console.WriteLine("Svako vino je dostupno u sledećim kategorijama: STOLNO / KVALITETNO / PREMIJUM \n");
+            if (ponuda == null || ponuda.Count == 0)
             {
                 Console.WriteLine("Katalog je prazan.");
+                Console.WriteLine("=================================================");
                 return;
             }
 
-            Console.WriteLine(Vino.Header());
-            foreach (var v in vina)
-                Console.WriteLine(v.ToString());
+            for(int i = 0; i < ponuda.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {ponuda[i]}");
+            }
+            Console.WriteLine();
+            Console.WriteLine("------------------------------------------------------------");
+            Console.WriteLine("* Napomena *");
+            Console.WriteLine("------------------------------------------------------------");
+            Console.WriteLine("Cene vina zavise od kategorije, broja flaša i zapremine.");
+            Console.WriteLine("Dostupne zapremine boca su u 0.75L i 1.5L.");
+            Console.WriteLine("------------------------------------------------------------");
         }
 
         private void ProdajaMeni()
@@ -111,16 +124,7 @@ namespace Presentation.Meni
                 return;
             }
 
-            Faktura faktura = prodajaServis.Prodaj(
-                nazivSorte.Trim(),
-                kategorija,
-                brojFlasa,
-                zapremina,
-                adresa.Trim(),
-                podrumId,
-                tipProdaje,
-                nacinPlacanja
-            );
+            Faktura faktura = prodajaServis.Prodaj(nazivSorte.Trim(), kategorija, brojFlasa, zapremina, adresa.Trim(), podrumId, tipProdaje, nacinPlacanja);
 
             if (faktura == null || faktura.Id == 0)
             {
@@ -147,8 +151,6 @@ namespace Presentation.Meni
                 Console.WriteLine($"Id: {f.Id}, Datum: {f.DatumIzdavanja:dd.MM.yyyy HH:mm}, Tip: {f.TipProdaje}, Plaćanje: {f.NacinPlacanja}, Ukupno: {f.UkupanIznos}");
             }
         }
-
-
 
         private static KategorijaVina UnesiKategoriju()
         {
