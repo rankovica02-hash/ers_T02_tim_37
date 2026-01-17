@@ -14,9 +14,6 @@ namespace Services.ProdajaServisi
         IPakovanjeServis pakovanjeServis;
         ILoggerServis logger;
 
-        // ako korisnik ne bira kategoriju, uzmi neku default
-        KategorijaVina defaultKategorija = KategorijaVina.KVALITETNO_VINO;
-
         public ProdajaServis(
             IVinaRepozitorijum vinaRepo,
             IKatalogVinaRepozitorijum katalogRepo,
@@ -52,6 +49,7 @@ namespace Services.ProdajaServisi
 
         public Faktura Prodaj(
             string nazivSorte,
+            KategorijaVina kategorija,
             int brojFlasa,
             double zapreminaLitara,
             string adresaOdredista,
@@ -61,17 +59,13 @@ namespace Services.ProdajaServisi
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(nazivSorte) ||
-                    brojFlasa <= 0 ||
-                    zapreminaLitara <= 0 ||
-                    string.IsNullOrWhiteSpace(adresaOdredista) ||
-                    vinskiPodrumId <= 0)
+                if (string.IsNullOrWhiteSpace(nazivSorte) || brojFlasa <= 0 || zapreminaLitara <= 0 || string.IsNullOrWhiteSpace(adresaOdredista) || vinskiPodrumId <= 0)
                 {
                     logger.EvidentirajDogadjaj(TipEvidencije.WARNING, "Prodaja - nevalidni ulazni podaci.");
                     return new Faktura();
                 }
 
-                // PROBLEM #2: max 20 po paleti
+                
                 int maxPoPaleti = BrojVinaPoPaleti.brojVinaPoPaleti;
 
                 int preostalo = brojFlasa;
@@ -79,9 +73,9 @@ namespace Services.ProdajaServisi
                 {
                     int tura = Math.Min(maxPoPaleti, preostalo);
 
-                    // 1) napravi novu paletu bas za ovu porudzbinu (proizvodnja se poziva unutra)
+
                     Paleta nova = pakovanjeServis.SpakujVinaUNovuPaletu(
-                        defaultKategorija,
+                        kategorija,
                         tura,
                         zapreminaLitara,
                         nazivSorte,
@@ -95,7 +89,7 @@ namespace Services.ProdajaServisi
                         return new Faktura();
                     }
 
-                    // PROBLEM #3: saljemo KONKRETNU paletu koju smo spakovali
+
                     Paleta poslata = pakovanjeServis.PosaljiPaletuUVinskiPodrum(nova, vinskiPodrumId);
                     if (poslata == null || poslata.Id == 0)
                     {
@@ -106,7 +100,6 @@ namespace Services.ProdajaServisi
                     preostalo -= tura;
                 }
 
-                // faktura (stavke cemo popunjavati kasnije kad radimo raspakivanje/isporuku)
                 Faktura faktura = new Faktura
                 {
                     TipProdaje = tipProdaje,
@@ -123,7 +116,7 @@ namespace Services.ProdajaServisi
             }
             catch
             {
-                logger.EvidentirajDogadjaj(TipEvidencije.ERROR, "Prodaja - izuzetak.");
+                logger.EvidentirajDogadjaj(TipEvidencije.ERROR, "Prodaja - izuzetak."); 
                 return new Faktura();
             }
         }

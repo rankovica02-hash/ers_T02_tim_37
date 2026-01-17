@@ -13,6 +13,7 @@ namespace Domain.Servisi
 
         IEnumerable<Vino> PrikaziKatalog();
         Faktura Prodaj(string nazivSorte,
+            KategorijaVina kategorija,
             int brojFlasa,
             double zapreminaLitara,
             string adresaOdredista,

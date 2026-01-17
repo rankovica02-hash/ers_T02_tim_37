@@ -8,6 +8,8 @@ using Domain.PomocneMetode.VinovaLoza;
 using Domain.Konstante;
 using Domain.Repozitorijumi;
 using Domain.Servisi;
+using Services.PakovanjeServisi;
+using Services.Proizvodnja;
 using Presentation.Authentifikacija;
 using Presentation.Meni;
 using Services.AutenftikacioniServisi;
@@ -43,6 +45,10 @@ namespace Loger_Bloger
             IVinogradarstvoServis vinogradarstvoServis = new VinogradarstvoServis(vinoveLozeRepozitorijum, loggerServis);
             ISkladistenjeServis skladistenjeServis;
             IFakturaPregledServis fakturaPregledServis = new FakturaPregledServis(fakturaRepozitorijum, loggerServis);
+            IProizvodnjaVinaServis proizvodnjaServis = new ProizvodnjeVinaServis(vinogradarstvoServis, vinaRepozitorijum, loggerServis);
+            IPakovanjeServis pakovanjeServis = new PakovanjeServis(paletaRepozitorijum, loggerServis, proizvodnjaServis);
+            IProdajaVinaServis prodajaServis = new ProdajaServis(vinaRepozitorijum, katalogVinaRepozitorijum, fakturaRepozitorijum, pakovanjeServis, loggerServis);
+
 
             // Ako nema nijednog korisnika u sistemu,dodati dva nova
             if (korisniciRepozitorijum.SviKorisnici().Count() == 0)
@@ -92,7 +98,7 @@ namespace Loger_Bloger
                 skladistenjeServis = new LokalniKelarSkladistenjeServis(paletaRepozitorijum, loggerServis);
             }
 
-            OpcijeMeni meni = new OpcijeMeni(paletaServis, skladistenjeServis); // TODO: Pass necessary dependencies
+            OpcijeMeni meni = new OpcijeMeni(prodajaServis);
             meni.PrikaziMeni();
         }
     }
