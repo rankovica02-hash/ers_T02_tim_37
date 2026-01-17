@@ -22,5 +22,6 @@ namespace Domain.Modeli
             RegionUzgoja = regionuzgoja;
             Faza = faza;
         }
+
     }
 }
