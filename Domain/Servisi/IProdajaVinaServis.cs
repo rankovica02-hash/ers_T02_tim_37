@@ -17,7 +17,6 @@ namespace Domain.Servisi
             int brojFlasa,
             double zapreminaLitara,
             string adresaOdredista,
-            long vinskiPodrumId,
             TipProdaje tipProdaje,
             NacinPlacanja nacinPlacanja);
         IEnumerable<Faktura> PregledSvihFaktura();

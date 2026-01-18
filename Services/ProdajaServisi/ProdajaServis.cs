@@ -27,6 +27,7 @@ namespace Services.ProdajaServisi
             this.pakovanjeServis = pakovanjeServis;
             this.logger = logger;
         }
+        private const long DefaultPodrumId = 1;
 
         public IEnumerable<Vino> PrikaziKatalog()
         {
@@ -53,13 +54,12 @@ namespace Services.ProdajaServisi
             int brojFlasa,
             double zapreminaLitara,
             string adresaOdredista,
-            long vinskiPodrumId,
             TipProdaje tipProdaje,
             NacinPlacanja nacinPlacanja)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(nazivSorte) || brojFlasa <= 0 || zapreminaLitara <= 0 || string.IsNullOrWhiteSpace(adresaOdredista) || vinskiPodrumId <= 0)
+                if (string.IsNullOrWhiteSpace(nazivSorte) || brojFlasa <= 0 || zapreminaLitara <= 0 || string.IsNullOrWhiteSpace(adresaOdredista))
                 {
                     logger.EvidentirajDogadjaj(TipEvidencije.WARNING, "Prodaja - nevalidni ulazni podaci.");
                     return new Faktura();
@@ -80,7 +80,7 @@ namespace Services.ProdajaServisi
                         zapreminaLitara,
                         nazivSorte,
                         adresaOdredista,
-                        vinskiPodrumId
+                        DefaultPodrumId
                     );
 
                     if (nova == null || nova.Id == 0)
@@ -90,7 +90,7 @@ namespace Services.ProdajaServisi
                     }
 
 
-                    Paleta poslata = pakovanjeServis.PosaljiPaletuUVinskiPodrum(nova, vinskiPodrumId);
+                    Paleta poslata = pakovanjeServis.PosaljiPaletuUVinskiPodrum(nova, DefaultPodrumId);
                     if (poslata == null || poslata.Id == 0)
                     {
                         logger.EvidentirajDogadjaj(TipEvidencije.ERROR, "Prodaja - neuspesno slanje palete.");

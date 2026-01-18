@@ -90,6 +90,13 @@ namespace Presentation.Meni
                 return;
             }
 
+            var ponuda = NasumicanNazivVinaHelper.Nazivi;
+            bool postoji = ponuda.Any(x => string.Equals(x, nazivSorte, StringComparison.OrdinalIgnoreCase));
+            if (!postoji)
+            {
+                Console.WriteLine("Nepoznat naziv vina. Morate uneti jedan od naziva iz kataloga (opcija 1).");
+                return;
+            }
             KategorijaVina kategorija = UnesiKategoriju();
 
             Console.Write("Unesite broj flasa: ");
@@ -100,7 +107,7 @@ namespace Presentation.Meni
             }
 
             Console.Write("Unesite zapreminu flase u litrima (0.75 ili 1.5): ");
-            if (!double.TryParse(Console.ReadLine(), out double zapremina) || zapremina <= 0)
+            if (!double.TryParse(Console.ReadLine(), out double zapremina) || zapremina <= 0 || (zapremina != 0.75 && zapremina != 1.5))
             {
                 Console.WriteLine("Zapremina nije validna.");
                 return;
@@ -117,14 +124,7 @@ namespace Presentation.Meni
                 return;
             }
 
-            Console.Write("Unesite ID vinskog podruma: ");
-            if (!long.TryParse(Console.ReadLine(), out long podrumId) || podrumId <= 0)
-            {
-                Console.WriteLine("PodrumId nije validan.");
-                return;
-            }
-
-            Faktura faktura = prodajaServis.Prodaj(nazivSorte.Trim(), kategorija, brojFlasa, zapremina, adresa.Trim(), podrumId, tipProdaje, nacinPlacanja);
+            Faktura faktura = prodajaServis.Prodaj(nazivSorte.Trim(), kategorija, brojFlasa, zapremina, adresa.Trim(), tipProdaje, nacinPlacanja);
 
             if (faktura == null || faktura.Id == 0)
             {
@@ -148,7 +148,7 @@ namespace Presentation.Meni
 
             foreach (var f in fakture)
             {
-                Console.WriteLine($"Id: {f.Id}, Datum: {f.DatumIzdavanja:dd.MM.yyyy HH:mm}, Tip: {f.TipProdaje}, Plaćanje: {f.NacinPlacanja}, Ukupno: {f.UkupanIznos}");
+                Console.WriteLine($"Id: {f.Id}, Datum: {f.DatumIzdavanja:dd.MM.yyyy HH:mm}, Tip: {f.TipProdaje}, Plaćanje: {f.NacinPlacanja} ");
             }
         }
 
