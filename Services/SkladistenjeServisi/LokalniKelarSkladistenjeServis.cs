@@ -12,9 +12,6 @@ namespace Services.SkladistenjeServisi
         IPaletaRepozitorijum paletaRepozitorijum;
         ILoggerServis loggerServis;
 
-        const int REDOVNA_ISPORUKA_BROJA_PALETA = IsporukaBrojaPaletaKonstante.REDOVNA_ISPORUKA_BROJA_PALETA;
-        const int REDOVNA_ISPORUKA_TRAJANJE_SEKUNDE = VremeIsporukaPaleta.REDOVNA_ISPORUKA_PALETA_SEKUNDE;
-
         public LokalniKelarSkladistenjeServis(IPaletaRepozitorijum paletaRepo, ILoggerServis logger)
         {
             paletaRepozitorijum = paletaRepo;
@@ -36,7 +33,7 @@ namespace Services.SkladistenjeServisi
 
                 while (preostalo > 0)
                 {
-                    int tura = Math.Min(REDOVNA_ISPORUKA_BROJA_PALETA, preostalo);
+                    int tura = Math.Min(IsporukaBrojaPaletaKonstante.REDOVNA_ISPORUKA_BROJA_PALETA, preostalo);
 
                     var spremne = paletaRepozitorijum.PronadjiPaletePoStatusu(TipStatusaPalete.OTPREMLJENA).Take(tura).ToList();
 
@@ -47,7 +44,7 @@ namespace Services.SkladistenjeServisi
                     }
 
                     // 1.8s po paleti
-                    Task.Delay(spremne.Count * REDOVNA_ISPORUKA_TRAJANJE_SEKUNDE).Wait();
+                    Task.Delay(spremne.Count * VremeIsporukaPaleta.REDOVNA_ISPORUKA_PALETA_SEKUNDE).Wait();
 
                     isporucene.AddRange(spremne);
                     preostalo -= spremne.Count;

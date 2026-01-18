@@ -12,10 +12,6 @@ namespace Services.SkladistenjeServisi
         IPaletaRepozitorijum paletaRepozitorijum;
         ILoggerServis loggerServis;
 
-        const int BRZA_ISPORUKA_BROJA_PALETA = IsporukaBrojaPaletaKonstante.BRZA_ISPORUKA_BROJA_PALETA;
-        const int BRZA_ISPORUKA_TRAJANJE_SEKUNDE = VremeIsporukaPaleta.BRZA_ISPORUKA_PALETA_SEKUNDE;
-
-
         public VinskiPodrumSkladistenjeServis(IPaletaRepozitorijum paletaRepo, ILoggerServis logger)
         {
             paletaRepozitorijum = paletaRepo;
@@ -37,7 +33,7 @@ namespace Services.SkladistenjeServisi
 
                 while (preostalo > 0)
                 {
-                    int tura = Math.Min(BRZA_ISPORUKA_BROJA_PALETA, preostalo);
+                    int tura = Math.Min(IsporukaBrojaPaletaKonstante.BRZA_ISPORUKA_BROJA_PALETA, preostalo);
 
                     var spremne = paletaRepozitorijum.PronadjiPaletePoStatusu(TipStatusaPalete.OTPREMLJENA).Take(tura).ToList();
 
@@ -48,7 +44,7 @@ namespace Services.SkladistenjeServisi
                     }
 
                     // 0.3s po paleti
-                    Task.Delay(spremne.Count * BRZA_ISPORUKA_TRAJANJE_SEKUNDE).Wait();
+                    Task.Delay(spremne.Count * VremeIsporukaPaleta.BRZA_ISPORUKA_PALETA_SEKUNDE).Wait();
 
                     isporucene.AddRange(spremne);
                     preostalo -= spremne.Count;
