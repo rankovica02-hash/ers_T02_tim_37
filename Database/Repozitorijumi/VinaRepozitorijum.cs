@@ -18,7 +18,7 @@ namespace Database.Repozitorijumi
         {
             try
             {
-                vino.Id = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                vino.Id = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                 vino.Sifra = $"VN-2025-{vino.Id}";    //VN-2025-ID_VINA
                 bazaPodataka.Tabele.Vina.Add(vino);
                 bool sacuvano = bazaPodataka.SacuvajPromene();

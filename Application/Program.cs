@@ -108,7 +108,7 @@ namespace Loger_Bloger
                     loggerServis
                 );
 
-            OpcijeMeni meni = new OpcijeMeni(prodajaServis);
+            OpcijeMeni meni = new OpcijeMeni(prodajaServis, prijavljen);
             meni.PrikaziMeni();
         }
     }

@@ -17,7 +17,7 @@ namespace Database.Repozitorijumi
         {
             try
             {
-                paleta.Id = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                paleta.Id = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                 paleta.Sifra = $"PA-2025-{paleta.Id}";
 
                 if (paleta.Status.Equals(default(TipStatusaPalete)))
