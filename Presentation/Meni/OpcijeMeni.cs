@@ -107,11 +107,22 @@ namespace Presentation.Meni
             }
 
             Console.Write("Unesite zapreminu flase u litrima (0.75 ili 1.5): ");
-            if (!double.TryParse(Console.ReadLine(), out double zapremina) || zapremina <= 0 || (zapremina != 0.75 && zapremina != 1.5))
+            string zapStr = (Console.ReadLine() ?? "").Trim();
+            zapStr = zapStr.Replace(',', '.');
+
+            if (!double.TryParse(zapStr, System.Globalization.CultureInfo.InvariantCulture, out double zapremina) || zapremina <= 0)
             {
                 Console.WriteLine("Zapremina nije validna.");
                 return;
             }
+
+            double z = Math.Round(zapremina, 2);
+            if (z != 0.75 && z != 1.50)
+            {
+                Console.WriteLine("Zapremina nije validna. Dozvoljeno: 0.75 ili 1.5.");
+                return;
+            }
+            zapremina = z;
 
             TipProdaje tipProdaje = UnesiTipProdaje();
             NacinPlacanja nacinPlacanja = UnesiNacinPlacanja();

@@ -43,11 +43,11 @@ namespace Loger_Bloger
             IAutentifikacijaServis autentifikacijaServis = new AutentifikacioniServis(korisniciRepozitorijum, loggerServis); 
             IPaletaServis paletaServis = new PaletaServis(paletaRepozitorijum,loggerServis);
             IVinogradarstvoServis vinogradarstvoServis = new VinogradarstvoServis(vinoveLozeRepozitorijum, loggerServis);
-            ISkladistenjeServis skladistenjeServis;
             IFakturaPregledServis fakturaPregledServis = new FakturaPregledServis(fakturaRepozitorijum, loggerServis);
             IProizvodnjaVinaServis proizvodnjaServis = new ProizvodnjeVinaServis(vinogradarstvoServis, vinaRepozitorijum, loggerServis);
+            ISkladistenjeServis skladistenjeServis;
             IPakovanjeServis pakovanjeServis = new PakovanjeServis(paletaRepozitorijum, loggerServis, proizvodnjaServis);
-            IProdajaVinaServis prodajaServis = new ProdajaServis(vinaRepozitorijum, katalogVinaRepozitorijum, fakturaRepozitorijum, pakovanjeServis, loggerServis);
+            //IProdajaVinaServis prodajaServis = new ProdajaServis(vinaRepozitorijum, katalogVinaRepozitorijum, fakturaRepozitorijum, pakovanjeServis, skladistenjeServis, loggerServis);
 
 
             // Ako nema nijednog korisnika u sistemu,dodati dva nova
@@ -97,6 +97,16 @@ namespace Loger_Bloger
             {
                 skladistenjeServis = new LokalniKelarSkladistenjeServis(paletaRepozitorijum, loggerServis);
             }
+
+            IProdajaVinaServis prodajaServis =
+                new ProdajaServis(
+                    vinaRepozitorijum,
+                    katalogVinaRepozitorijum,
+                    fakturaRepozitorijum,
+                    pakovanjeServis,
+                    skladistenjeServis,
+                    loggerServis
+                );
 
             OpcijeMeni meni = new OpcijeMeni(prodajaServis);
             meni.PrikaziMeni();

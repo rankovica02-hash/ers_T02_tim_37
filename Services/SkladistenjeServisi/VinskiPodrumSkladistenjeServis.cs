@@ -3,6 +3,7 @@ using Domain.Modeli;
 using Domain.Repozitorijumi;
 using Domain.Servisi;
 using Domain.Konstante;
+using System.Linq;
 
 
 namespace Services.SkladistenjeServisi
@@ -40,14 +41,16 @@ namespace Services.SkladistenjeServisi
                     if (spremne.Count == 0)
                     {
                         loggerServis.EvidentirajDogadjaj(TipEvidencije.WARNING, "Vinski podrum: Nema dostupnih OTPREMLJENIH paleta za isporuku.");
-                        break; // da bi se dostavila isporucena, da ne vratimo praznu listu
+                        break; 
                     }
 
                     // 0.3s po paleti
-                    Task.Delay(spremne.Count * VremeIsporukaPaleta.BRZA_ISPORUKA_PALETA_SEKUNDE).Wait();
+                    int ukupnoMs = spremne.Count * VremeIsporukaPaleta.BRZA_ISPORUKA_PALETA_SEKUNDE;
+                    Task.Delay(ukupnoMs).Wait();
 
                     isporucene.AddRange(spremne);
                     preostalo -= spremne.Count;
+                    Console.WriteLine($"DEBUG: spremne palete = {spremne.Count}, trazeno = {tura}");
 
                     loggerServis.EvidentirajDogadjaj(TipEvidencije.INFO, $"Vinski podrum: Isporuceno {spremne.Count} paleta u turi (max 5). Preostalo: {preostalo}.");
                 }

@@ -12,6 +12,7 @@ namespace Services.ProdajaServisi
         IKatalogVinaRepozitorijum katalogRepo;
         IFakturaRepozitorijum fakturaRepo;
         IPakovanjeServis pakovanjeServis;
+        ISkladistenjeServis skladistenjeServis;
         ILoggerServis logger;
 
         public ProdajaServis(
@@ -19,12 +20,14 @@ namespace Services.ProdajaServisi
             IKatalogVinaRepozitorijum katalogRepo,
             IFakturaRepozitorijum fakturaRepo,
             IPakovanjeServis pakovanjeServis,
+            ISkladistenjeServis skladistenjeServis,
             ILoggerServis logger)
         {
             this.vinaRepo = vinaRepo;
             this.katalogRepo = katalogRepo;
             this.fakturaRepo = fakturaRepo;
             this.pakovanjeServis = pakovanjeServis;
+            this.skladistenjeServis = skladistenjeServis;
             this.logger = logger;
         }
         private const long DefaultPodrumId = 1;
@@ -57,17 +60,20 @@ namespace Services.ProdajaServisi
             TipProdaje tipProdaje,
             NacinPlacanja nacinPlacanja)
         {
+
+
             try
             {
+
                 if (string.IsNullOrWhiteSpace(nazivSorte) || brojFlasa <= 0 || zapreminaLitara <= 0 || string.IsNullOrWhiteSpace(adresaOdredista))
                 {
                     logger.EvidentirajDogadjaj(TipEvidencije.WARNING, "Prodaja - nevalidni ulazni podaci.");
                     return new Faktura();
                 }
 
-                
-                int maxPoPaleti = BrojVinaPoPaleti.brojVinaPoPaleti;
 
+                int maxPoPaleti = BrojVinaPoPaleti.brojVinaPoPaleti;
+                int brojPaletaZaIsporuku = (int)Math.Ceiling(brojFlasa / (double)maxPoPaleti);
                 int preostalo = brojFlasa;
                 while (preostalo > 0)
                 {
@@ -99,7 +105,13 @@ namespace Services.ProdajaServisi
 
                     preostalo -= tura;
                 }
+                var isporucene = skladistenjeServis.IsporuciPaleteServisuProdaje(brojPaletaZaIsporuku);
 
+
+                logger.EvidentirajDogadjaj(
+                    TipEvidencije.INFO,
+                    $"Prodaja - zahtevana isporuka {brojPaletaZaIsporuku} paleta, isporuceno {isporucene.Count}."
+                );
                 Faktura faktura = new Faktura
                 {
                     TipProdaje = tipProdaje,
