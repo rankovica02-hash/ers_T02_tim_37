@@ -4,6 +4,7 @@ namespace Domain.Enumeracije
     public enum TipStatusaPalete
     {
         UPAKOVANA,
-        OTPREMLJENA
+        OTPREMLJENA,
+        ISPORUCENA
     }
 }

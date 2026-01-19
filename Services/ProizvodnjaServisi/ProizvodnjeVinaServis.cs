@@ -131,16 +131,11 @@ namespace Services.Proizvodnja
             }
         }
 
-        public IEnumerable<Vino> ZahtevajProizvedenaVina(
-            KategorijaVina kategorija,
-            int brojFlasa,
-            double zapreminaLitara,
-            string nazivSorte)
+        public IEnumerable<Vino> ZahtevajProizvedenaVina(KategorijaVina kategorija,int brojFlasa,double zapreminaLitara,string nazivSorte)
         {
             try
             {
-                IEnumerable<Vino> proizvedena =
-                    vinaRepozitorijum.PronadjiVinaPoKategoriji(kategorija);
+                IEnumerable<Vino> proizvedena = vinaRepozitorijum.PronadjiVinaPoKategoriji(kategorija);
 
                 List<Vino> trazenaVina = [];
 
@@ -155,19 +150,11 @@ namespace Services.Proizvodnja
 
                 if (brojFlasa > 0)
                 {
-                    IEnumerable<Vino> novo =
-                        PocetakFermentacije(
-                            kategorija,
-                            brojFlasa,
-                            zapreminaLitara,
-                            nazivSorte);
-
+                    IEnumerable<Vino> novo =PocetakFermentacije(kategorija,brojFlasa,zapreminaLitara,nazivSorte);
                     trazenaVina.AddRange(novo);
                 }
 
-                loggerServis.EvidentirajDogadjaj(
-                    TipEvidencije.INFO,
-                    $"Dobijeno {trazenaVina.Count} vina kategorije {kategorija}.");
+                loggerServis.EvidentirajDogadjaj(TipEvidencije.INFO,$"Dobijeno {trazenaVina.Count} vina kategorije {kategorija}.");
 
                 return trazenaVina;
             }

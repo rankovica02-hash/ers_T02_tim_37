@@ -49,6 +49,11 @@ namespace Services.SkladistenjeServisi
                     Task.Delay(ukupnoMs).Wait();
 
                     isporucene.AddRange(spremne);
+                    foreach (var paleta in spremne)
+                    {
+                        paleta.Status = TipStatusaPalete.ISPORUCENA;
+                        paletaRepozitorijum.AzurirajPaletu(paleta);
+                    }
                     preostalo -= spremne.Count;
                     Console.WriteLine($"DEBUG: spremne palete = {spremne.Count}, trazeno = {tura}");
 

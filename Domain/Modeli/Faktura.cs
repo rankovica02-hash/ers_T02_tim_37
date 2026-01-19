@@ -13,7 +13,6 @@ namespace Domain.Modeli
 
         public Faktura()
         {
-            Id = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             DatumIzdavanja = DateTime.Now;
         }
 

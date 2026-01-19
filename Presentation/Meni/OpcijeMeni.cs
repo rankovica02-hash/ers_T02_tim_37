@@ -7,10 +7,14 @@ namespace Presentation.Meni
     public class OpcijeMeni
     {
         IProdajaVinaServis prodajaServis;
-
-        public OpcijeMeni(IProdajaVinaServis prodajaServis)
+        Korisnik prijavljen;
+        
+        
+        List<long> faktureUTekuccojPrijavi = new();
+        public OpcijeMeni(IProdajaVinaServis prodajaServis, Korisnik prijavljen)
         {
             this.prodajaServis = prodajaServis;
+            this.prijavljen = prijavljen;
         }
         public void PrikaziMeni()
         {
@@ -20,7 +24,10 @@ namespace Presentation.Meni
                 Console.WriteLine("\n============================================ Meni ===========================================");
                 Console.WriteLine("\n1. Katalog vina");
                 Console.WriteLine("2. Prodaja vina");
-                Console.WriteLine("3. Pregled fakture");
+                if (prijavljen.Uloga == TipKorisnika.GlavniEnolog)
+                    Console.WriteLine("3. Pregled svih faktura");
+                else
+                    Console.WriteLine("3. Pregled fakture");
                 Console.WriteLine("0. Izlaz");
                 Console.WriteLine("Opcija: ");
 
@@ -142,27 +149,49 @@ namespace Presentation.Meni
                 Console.WriteLine("Prodaja nije uspela.");
                 return;
             }
-
+            faktureUTekuccojPrijavi.Add(faktura.Id);
             Console.WriteLine($"Prodaja uspesna! Kreirana faktura (Id): {faktura.Id}");
         }
 
         private void PregledFakture()
         {
-            var fakture = prodajaServis.PregledSvihFaktura().ToList();
+            var sveFakture = prodajaServis.PregledSvihFaktura().ToList();
             Console.WriteLine("\n=== FAKTURE ===");
 
-            if (fakture.Count == 0)
+            if (sveFakture.Count == 0)
             {
                 Console.WriteLine("Nema faktura (još nije bilo prodaje).");
                 return;
             }
 
-            foreach (var f in fakture)
+
+            if (prijavljen.Uloga == TipKorisnika.GlavniEnolog)
             {
-                Console.WriteLine($"Id: {f.Id}, Datum: {f.DatumIzdavanja:dd.MM.yyyy HH:mm}, Tip: {f.TipProdaje}, Plaćanje: {f.NacinPlacanja} ");
+                foreach (var f in sveFakture)
+                {
+                    Console.WriteLine($"Id: {f.Id}, Datum: {f.DatumIzdavanja:dd.MM.yyyy HH:mm}, Tip: {f.TipProdaje}, Plaćanje: {f.NacinPlacanja}");
+                }
+                return;
+            }
+
+            if (faktureUTekuccojPrijavi.Count == 0)
+            {
+                Console.WriteLine("Nema dostupnih faktura.");
+                return;
+            }
+            var mojeFakture = sveFakture.Where(f => faktureUTekuccojPrijavi.Contains(f.Id)).ToList();
+
+            if (mojeFakture.Count == 0)
+            {
+                Console.WriteLine("Nema dostupnih faktura.");
+                return;
+            }
+
+            foreach (var f in mojeFakture)
+            {
+                Console.WriteLine($"Id: {f.Id}, Datum: {f.DatumIzdavanja:dd.MM.yyyy HH:mm}, Tip: {f.TipProdaje}, Plaćanje: {f.NacinPlacanja}");
             }
         }
-
         private static KategorijaVina UnesiKategoriju()
         {
             Console.WriteLine("Izaberite kategoriju vina:");

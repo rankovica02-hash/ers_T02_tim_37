@@ -1,4 +1,5 @@
 ﻿using Domain.BazaPodataka;
+using Domain.Modeli;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,13 @@ namespace Database.BazaPodataka
                     using StringReader citac = new(xml);
 
                     Tabele = (TabeleBazaPodataka?)serializer.Deserialize(citac) ?? new();
-                    
+                    Tabele.Fakture ??= new List<Faktura>();
+                    Tabele.Vina ??= new List<Vino>();
+                    Tabele.VinoveLoze ??= new List<VinovaLoza>();
+                    Tabele.Palete ??= new List<Paleta>();
+                    Tabele.Korisnici ??= new List<Korisnik>();
+                    Tabele.VinskiPodrumi ??= new List<VinskiPodrum>();
+                    Tabele.KataloziVina ??= new List<KatalogVina>();
                 }
                 else
                 {

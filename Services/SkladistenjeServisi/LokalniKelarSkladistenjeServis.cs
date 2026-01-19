@@ -39,8 +39,7 @@ namespace Services.SkladistenjeServisi
 
                     var spremne = paletaRepozitorijum.PronadjiPaletePoStatusu(TipStatusaPalete.OTPREMLJENA).Take(tura).ToList();
                     var sveOtpremljene = paletaRepozitorijum.PronadjiPaletePoStatusu(TipStatusaPalete.OTPREMLJENA).ToList();
-                    Console.WriteLine($"DEBUG: ukupno OTPREMLJENIH u bazi = {sveOtpremljene.Count}");
-                    Console.WriteLine($"DEBUG: uzimam u turi = {tura}, spremne = {spremne.Count}");
+
 
                     if (spremne.Count == 0)
                     {
@@ -53,6 +52,11 @@ namespace Services.SkladistenjeServisi
                     Task.Delay(ukupnoMs).Wait();
 
                     isporucene.AddRange(spremne);
+                    foreach (var paleta in spremne)
+                    {
+                        paleta.Status = TipStatusaPalete.ISPORUCENA;
+                        paletaRepozitorijum.AzurirajPaletu(paleta);
+                    }
                     preostalo -= spremne.Count;
 
                     loggerServis.EvidentirajDogadjaj(TipEvidencije.INFO, $"Lokalni Kelar: Isporuceno {spremne.Count} paleta u turi (max 2). Preostalo: {preostalo}.");

@@ -18,7 +18,7 @@ namespace Database.Repozitorijumi
         {
             try
             {
-                vinovaloza.Id = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                vinovaloza.Id = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                 bazaPodataka.Tabele.VinoveLoze.Add(vinovaloza);
                 bool sacuvano = bazaPodataka.SacuvajPromene();
 
